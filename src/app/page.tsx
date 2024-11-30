@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import Container from '@/components/ui/container'
 import { getDeployedCampaigns } from '@/web3/factory'
 import { useEffect, useState } from 'react'
 
@@ -49,37 +50,39 @@ export default function Home() {
   }
 
   return (
-    <div className="p-4">
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-
-      {loading ? (
-        <div className="flex flex-col items-center gap-4">
-          <p>Please connect your wallet to view campaigns</p>
-          <Button onClick={connectWallet}>Connect MetaMask</Button>
-        </div>
-      ) : (
-        <div>
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Active Campaigns</h1>
+    <Container>
+      <div className="p-4 flex justify-center items-center w-full">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
           </div>
+        )}
 
-          {campaigns.length > 0 ? (
-            <ul className="space-y-2">
-              {campaigns.map((address) => (
-                <li key={address} className="border p-4 rounded">
-                  {address}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No active campaigns found or not connected to MetaMask</p>
-          )}
-        </div>
-      )}
-    </div>
+        {loading ? (
+          <div className="flex flex-col items-center gap-4">
+            <p>Please connect your wallet to view campaigns</p>
+            <Button onClick={connectWallet}>Connect MetaMask</Button>
+          </div>
+        ) : (
+          <div>
+            <div className="flex justify-center items-center mb-6">
+              <h1 className="text-2xl font-bold">Active Campaigns</h1>
+            </div>
+
+            {campaigns.length > 0 ? (
+              <ul className="space-y-2">
+                {campaigns.map((address) => (
+                  <li key={address} className="border p-4 rounded">
+                    {address}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No active campaigns found or not connected to MetaMask</p>
+            )}
+          </div>
+        )}
+      </div>
+    </Container>
   )
 }
