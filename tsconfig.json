@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     "**/*.js",
     "**/*.jsx",
-    "**/*.json"
+    "**/*.json",
+    "next.config.mts"
   ],
   "exclude": ["node_modules"]
 }
