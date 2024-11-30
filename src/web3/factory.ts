@@ -1,6 +1,7 @@
 import { Contract, ContractAbi } from 'web3'
 import web3 from './web3'
 import CampaignFactory from '../../eth/build/CampaignFactory.json'
+import 'dotenv/config'
 
 class FactoryError extends Error {
   constructor(message: string) {
@@ -23,7 +24,7 @@ async function initializeFactory() {
     }
 
     const abi = CampaignFactory.abi
-    const address = '0x37da12D36B0bBdbef03002c2a94Ff8b7148BA0E4'
+    const address = process.env.NEXT_PUBLIC_CAMPAIGN_FACTORY_ADDRESS as string
 
     // Validate contract address
     if (!web3.utils.isAddress(address)) {

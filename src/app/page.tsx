@@ -1,16 +1,10 @@
-import React from 'react'
-import factory from '../web3/factory'
+import CampaignList from '@/components/CampaignList'
+import { Suspense } from 'react'
 
-async function Home() {
-  const factoryInstance = await factory
-  if (!factoryInstance) {
-    throw new Error('Factory not initialized')
-  }
-
-  const campaigns = await factoryInstance.methods.getDeployedCampaigns().call()
-  console.log(campaigns)
-
-  return <div>Campaigns</div>
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading campaigns...</div>}>
+      <CampaignList />
+    </Suspense>
+  )
 }
-
-export default Home
