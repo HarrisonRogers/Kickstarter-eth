@@ -1,5 +1,4 @@
 import './globals.css'
-import ClientProvider from '@/providers/ClientProvider'
 
 export default function RootLayout({
   children,
@@ -10,7 +9,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <main className="flex min-h-screen mx-auto w-full lg:max-w-screen-lg p-2 md:p-3 lg:p-4">
-          <ClientProvider>{children}</ClientProvider>
+          {children}
         </main>
       </body>
     </html>
