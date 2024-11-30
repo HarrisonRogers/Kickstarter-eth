@@ -1,4 +1,6 @@
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
+import { Navbar } from '@/components/Navbar'
 
 export default function RootLayout({
   children,
@@ -8,9 +10,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <main className="flex min-h-screen mx-auto w-full lg:max-w-screen-lg p-2 md:p-3 lg:p-4">
-          {children}
-        </main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main className="flex mx-auto w-full lg:max-w-screen-lg mt-20 p-2 md:p-3 lg:p-4 pt-16">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   )
