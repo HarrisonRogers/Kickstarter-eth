@@ -49,7 +49,7 @@ async function initializeFactory() {
 }
 
 // Initialize the factory
-const factory = initializeFactory()
+const factory: Promise<Contract<ContractAbi> | null> = initializeFactory()
 
 // Helper function to get the current account
 export async function getCurrentAccount(): Promise<string> {

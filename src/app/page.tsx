@@ -1,19 +1,14 @@
-'use client'
-
-import React, { useEffect } from 'react'
+import React from 'react'
 import factory from '../web3/factory'
 
-function Home() {
-  useEffect(() => {
-    const fetchCampaigns = async () => {
-      const campaigns = await (await factory)!.methods
-        .getDeployedCampaigns()
-        .call()
-      console.log(campaigns)
-    }
+async function Home() {
+  const factoryInstance = await factory
+  if (!factoryInstance) {
+    throw new Error('Factory not initialized')
+  }
 
-    fetchCampaigns()
-  }, [])
+  const campaigns = await factoryInstance.methods.getDeployedCampaigns().call()
+  console.log(campaigns)
 
   return <div>Campaigns</div>
 }
