@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import Container from '@/components/ui/container'
+import LinkComponent from '@/components/ui/links/link'
 import { getDeployedCampaigns } from '@/web3/factory'
 import { useEffect, useState } from 'react'
 
@@ -72,8 +73,14 @@ export default function Home() {
             {campaigns.length > 0 ? (
               <ul className="space-y-2">
                 {campaigns.map((address) => (
-                  <li key={address} className="border p-4 rounded">
+                  <li
+                    key={address}
+                    className="border p-4 rounded flex flex-col"
+                  >
                     {address}
+                    <LinkComponent href={`/campaigns/${address}`}>
+                      View
+                    </LinkComponent>
                   </li>
                 ))}
               </ul>

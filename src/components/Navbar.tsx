@@ -9,12 +9,15 @@ export function Navbar() {
       <div className="flex h-14 items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-2">
           <Link href="/">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost">
               <HomeIcon className="h-5 w-5" />
-              <span className="sr-only">Home</span>
+              <span>Home</span>
             </Button>
           </Link>
         </div>
+        <Link href="/campaigns/new" className="border rounded-md px-4 py-2">
+          + Create Campaign
+        </Link>
         <div className="flex items-center gap-2">
           <ThemeToggle />
         </div>
