@@ -4,14 +4,41 @@ import { Button } from '@/components/ui/button'
 import Container from '@/components/ui/container'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { getFactory } from '@/web3/factory'
+import web3 from '@/web3/web3'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 function NewPage() {
   const [minimumContribution, setMinimumContribution] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const router = useRouter()
 
   const handleCreateCampaign = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(minimumContribution)
+
+    try {
+      setLoading(true)
+      const factoryInstance = await getFactory()
+      const accounts = await web3.eth.getAccounts()
+
+      const result = await factoryInstance.methods
+        .createCampaign(minimumContribution)
+        .send({
+          from: accounts[0],
+        })
+      if (result) {
+        setLoading(false)
+        setSuccess(true)
+        router.push('/')
+      }
+    } catch (error) {
+      console.error('Error creating campaign:', error)
+      setLoading(false)
+      setError((error as Error).message)
+    }
   }
 
   return (
@@ -32,9 +59,11 @@ function NewPage() {
                 onChange={(e) => setMinimumContribution(e.target.value)}
               />
             </div>
-            <Button type="submit" className="w-full">
-              Create
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? 'Creating...' : 'Create'}
             </Button>
+            {error && <p className="text-coral">{error}</p>}
+            {success && <p className="italic">Campaign created successfully</p>}
           </form>
         </div>
       </div>

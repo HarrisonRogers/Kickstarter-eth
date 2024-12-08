@@ -77,4 +77,14 @@ export async function getDeployedCampaigns(): Promise<string[]> {
   }
 }
 
+// Instead of exporting the Promise directly, export a function that gets the instance
+export async function getFactory(): Promise<Contract<ContractAbi>> {
+  const instance = await factory
+  if (!instance) {
+    throw new FactoryError('Factory not initialized')
+  }
+  return instance
+}
+
+// You can keep the original export for backward compatibility
 export default factory
