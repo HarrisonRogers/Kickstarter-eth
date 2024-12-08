@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import Container from '@/components/ui/container'
 import LinkComponent from '@/components/ui/links/link'
 import { getDeployedCampaigns } from '@/web3/factory'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -85,7 +86,17 @@ export default function Home() {
                 ))}
               </ul>
             ) : (
-              <p>No active campaigns found or not connected to MetaMask</p>
+              <div className="flex flex-col items-center">
+                <p className="mb-6">
+                  No active campaigns found or not connected to MetaMask
+                </p>
+                <Link
+                  href="/campaigns/new"
+                  className="border rounded-md px-4 py-2 hover:opacity-70 active:scale-95 transition-all"
+                >
+                  Create Campaign
+                </Link>
+              </div>
             )}
           </div>
         )}
