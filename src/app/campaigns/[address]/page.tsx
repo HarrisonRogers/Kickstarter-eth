@@ -59,7 +59,7 @@ async function Page({ params }: { params: PageProps }) {
     {
       title: 'Manager Address',
       value: summary.manager,
-      description: 'Address of the campaign manager',
+      description: 'Eth address of the campaign manager',
     },
     {
       title: 'Minimum Contribution',
