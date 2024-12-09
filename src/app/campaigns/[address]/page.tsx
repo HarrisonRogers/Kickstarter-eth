@@ -1,6 +1,8 @@
 import Container from '@/components/ui/container'
 import React from 'react'
 import { getCampaign } from '@/web3/campaign'
+import { Card } from '@/components/ui/card'
+import web3 from '@/web3/web3'
 
 type PageProps = {
   address: string
@@ -14,6 +16,12 @@ type CampaignSummary = {
   manager: string
 }
 
+type CampaignCard = {
+  title: string
+  value: string
+  description: string
+}
+
 async function Page({ params }: { params: PageProps }) {
   const { address } = params
   let summary: CampaignSummary | null = null
@@ -24,10 +32,10 @@ async function Page({ params }: { params: PageProps }) {
       await campaign.methods.getSummary().call()
 
     summary = {
-      minimumContribution: response[0],
-      balance: response[1],
-      requestsCount: response[2],
-      approversCount: response[3],
+      minimumContribution: String(response[0]),
+      balance: String(response[1]),
+      requestsCount: String(response[2]),
+      approversCount: String(response[3]),
       manager: response[4],
     }
   } catch (error) {
@@ -44,37 +52,56 @@ async function Page({ params }: { params: PageProps }) {
     )
   }
 
+  console.log(summary.minimumContribution)
+
+  // Create cards data
+  const campaignCards: CampaignCard[] = [
+    {
+      title: 'Manager Address',
+      value: summary.manager,
+      description: 'Address of the campaign manager',
+    },
+    {
+      title: 'Minimum Contribution',
+      value: `${web3.utils.fromWei(summary.minimumContribution, 'ether')} ETH`,
+      description: 'Minimum amount needed to contribute to this campaign',
+    },
+    {
+      title: 'Campaign Balance',
+      value: `${
+        Number(summary.balance) > Number(summary.minimumContribution)
+          ? web3.utils.fromWei(summary.balance, 'ether')
+          : '0'
+      } ETH`,
+      description: 'Current balance of the campaign',
+    },
+    {
+      title: 'Number of Requests',
+      value: summary.requestsCount || '0',
+      description: 'Number of spending requests made by the manager',
+    },
+    {
+      title: 'Contributors',
+      value: summary.approversCount || '0',
+      description: 'Number of people who have donated to this campaign',
+    },
+  ]
+
   return (
     <Container>
       <div className="p-4 flex flex-col items-center justify-center w-full">
-        <h1 className="text-2xl font-bold">{address} Campaign</h1>
+        <h1 className="text-2xl font-bold mb-6">{address} Campaign</h1>
 
-        <div className="mt-4 w-full max-w-2xl space-y-4">
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-2">Campaign Details</h2>
-            <div className="space-y-2">
-              <p>
-                <span className="font-medium">Minimum Contribution:</span>{' '}
-                {summary.minimumContribution || '0'} wei
-              </p>
-              <p>
-                <span className="font-medium">Campaign Balance:</span>{' '}
-                {summary.balance || '0'} wei
-              </p>
-              <p>
-                <span className="font-medium">Number of Requests:</span>{' '}
-                {summary.requestsCount || '0'}
-              </p>
-              <p>
-                <span className="font-medium">Number of Contributors:</span>{' '}
-                {summary.approversCount || '0'}
-              </p>
-              <p>
-                <span className="font-medium">Manager Address:</span>{' '}
-                {summary.manager}
-              </p>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-7xl">
+          {campaignCards.map((card, index) => (
+            <Card key={index} className="w-full">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
+                <p className="text-lg mb-2 break-all">{card.value}</p>
+                <p className="text-sm text-gray-500">{card.description}</p>
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
     </Container>
