@@ -1,35 +1,36 @@
-import Container from '@/components/ui/container'
-import React from 'react'
-import { getCampaign } from '@/web3/campaign'
-import { Card } from '@/components/ui/card'
-import web3 from '@/web3/web3'
+import Container from '@/components/ui/container';
+import React from 'react';
+import { getCampaign } from '@/web3/campaign';
+import { Card } from '@/components/ui/card';
+import web3 from '@/web3/web3';
+import ContributeForm from '@/components/contributeForm';
 
 type PageProps = {
-  address: string
-}
+  address: string;
+};
 
 type CampaignSummary = {
-  minimumContribution: string
-  balance: string
-  requestsCount: string
-  approversCount: string
-  manager: string
-}
+  minimumContribution: string;
+  balance: string;
+  requestsCount: string;
+  approversCount: string;
+  manager: string;
+};
 
 type CampaignCard = {
-  title: string
-  value: string
-  description: string
-}
+  title: string;
+  value: string;
+  description: string;
+};
 
 async function Page({ params }: { params: PageProps }) {
-  const { address } = params
-  let summary: CampaignSummary | null = null
+  const { address } = params;
+  let summary: CampaignSummary | null = null;
 
   try {
-    const campaign = await getCampaign(address)
+    const campaign = await getCampaign(address);
     const response: [string, string, string, string, string] =
-      await campaign.methods.getSummary().call()
+      await campaign.methods.getSummary().call();
 
     summary = {
       minimumContribution: String(response[0]),
@@ -37,9 +38,9 @@ async function Page({ params }: { params: PageProps }) {
       requestsCount: String(response[2]),
       approversCount: String(response[3]),
       manager: response[4],
-    }
+    };
   } catch (error) {
-    console.error('Error fetching campaign:', error)
+    console.error('Error fetching campaign:', error);
   }
 
   if (!summary) {
@@ -49,10 +50,8 @@ async function Page({ params }: { params: PageProps }) {
           <h1 className="text-2xl font-bold">Error loading campaign</h1>
         </div>
       </Container>
-    )
+    );
   }
-
-  console.log(summary.minimumContribution)
 
   // Create cards data
   const campaignCards: CampaignCard[] = [
@@ -85,27 +84,34 @@ async function Page({ params }: { params: PageProps }) {
       value: summary.approversCount || '0',
       description: 'Number of people who have donated to this campaign',
     },
-  ]
+  ];
 
   return (
     <Container>
       <div className="p-4 flex flex-col items-center justify-center w-full">
         <h1 className="text-2xl font-bold mb-6">{address} Campaign</h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-7xl">
-          {campaignCards.map((card, index) => (
-            <Card key={index} className="w-full">
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-                <p className="text-lg mb-2 break-all">{card.value}</p>
-                <p className="text-sm text-gray-500">{card.description}</p>
-              </div>
-            </Card>
-          ))}
+        <div className="grid grid-cols-5 gap-10 w-full max-w-7xl">
+          <div className="grid col-span-3 grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-7xl">
+            {campaignCards.map((card, index) => (
+              <Card
+                key={index}
+                className="w-full hover:scale-105 transition-all duration-300"
+              >
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
+                  <p className="text-lg mb-2 break-all">{card.value}</p>
+                  <p className="text-sm text-gray-500">{card.description}</p>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <div className="col-span-2">
+            <ContributeForm address={address} />
+          </div>
         </div>
       </div>
     </Container>
-  )
+  );
 }
 
-export default Page
+export default Page;
