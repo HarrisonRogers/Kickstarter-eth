@@ -4,6 +4,8 @@ import { getCampaign } from '@/web3/campaign';
 import { Card } from '@/components/ui/card';
 import web3 from '@/web3/web3';
 import ContributeForm from '@/components/contributeForm';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 type PageProps = {
   address: string;
@@ -87,10 +89,10 @@ async function Page({ params }: { params: PageProps }) {
   ];
 
   return (
-    <Container>
-      <div className="p-4 flex flex-col items-center justify-center w-full">
-        <h1 className="text-2xl font-bold mb-6">{address} Campaign</h1>
-        <div className="grid grid-cols-5 gap-10 w-full max-w-7xl">
+    <div className="p-4 flex flex-col items-center justify-center w-full">
+      <h1 className="text-2xl font-bold mb-6">{address} Campaign</h1>
+      <div className="grid grid-cols-5 gap-10 w-full max-w-7xl">
+        <div className="col-span-3">
           <div className="grid col-span-3 grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-7xl">
             {campaignCards.map((card, index) => (
               <Card
@@ -105,12 +107,15 @@ async function Page({ params }: { params: PageProps }) {
               </Card>
             ))}
           </div>
-          <div className="col-span-2">
-            <ContributeForm address={address} />
-          </div>
+          <Link href={`/campaigns/${address}/requests`}>
+            <Button className="w-full mt-10">View Requests</Button>
+          </Link>
+        </div>
+        <div className="col-span-2">
+          <ContributeForm address={address} />
         </div>
       </div>
-    </Container>
+    </div>
   );
 }
 
