@@ -12,7 +12,6 @@ import web3 from '@/web3/web3';
 import { Button } from '@/components/ui/button';
 
 function RequestsTable({ requests }: { requests: RequestProps[] }) {
-  console.log(requests);
   return (
     <Table className="mt-7">
       <TableHeader>
