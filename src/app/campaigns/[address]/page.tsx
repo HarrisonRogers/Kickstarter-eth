@@ -89,30 +89,42 @@ async function Page({ params }: { params: PageProps }) {
   ];
 
   return (
-    <div className="p-4 flex flex-col items-center justify-center w-full">
-      <h1 className="text-2xl font-bold mb-6">{address} Campaign</h1>
-      <div className="grid grid-cols-5 gap-10 w-full max-w-7xl">
-        <div className="col-span-3">
-          <div className="grid col-span-3 grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-7xl">
-            {campaignCards.map((card, index) => (
-              <Card
-                key={index}
-                className="w-full hover:scale-105 transition-all duration-300"
-              >
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-                  <p className="text-lg mb-2 break-all">{card.value}</p>
-                  <p className="text-sm text-gray-500">{card.description}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-          <Link href={`/campaigns/${address}/requests`}>
-            <Button className="w-full mt-10">View Requests</Button>
+    <div className="p-8 flex flex-col items-center justify-center w-full">
+      <div className="w-full max-w-7xl">
+        <div className="mb-8">
+          <Link href="/">
+            <Button variant="ghost" className="mb-4">
+              ← Back to Campaigns
+            </Button>
           </Link>
+          <h1 className="text-3xl font-bold">{address} Campaign</h1>
         </div>
-        <div className="col-span-2">
-          <ContributeForm address={address} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 w-full">
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+              {campaignCards.map((card, index) => (
+                <Card
+                  key={index}
+                  className="w-full hover:scale-105 transition-all duration-300"
+                >
+                  <div className="p-6">
+                    <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
+                    <p className="text-lg mb-2 break-all">{card.value}</p>
+                    <p className="text-sm text-gray-500">{card.description}</p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <Link href={`/campaigns/${address}/requests`}>
+                <Button size="lg">View Requests</Button>
+              </Link>
+            </div>
+          </div>
+          <div className="lg:col-span-2">
+            <ContributeForm address={address} />
+          </div>
         </div>
       </div>
     </div>
