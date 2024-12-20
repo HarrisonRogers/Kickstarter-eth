@@ -6,6 +6,7 @@ import web3 from '@/web3/web3';
 import ContributeForm from '@/components/contributeForm';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import BackButton from '@/components/ui/backButton';
 
 type PageProps = {
   address: string;
@@ -92,11 +93,7 @@ async function Page({ params }: { params: PageProps }) {
     <div className="p-8 flex flex-col items-center justify-center w-full">
       <div className="w-full max-w-7xl">
         <div className="mb-8">
-          <Link href="/">
-            <Button variant="ghost" className="mb-4">
-              ← Back to Campaigns
-            </Button>
-          </Link>
+          <BackButton label="Campaigns" />
           <h1 className="text-3xl font-bold">{address} Campaign</h1>
         </div>
 

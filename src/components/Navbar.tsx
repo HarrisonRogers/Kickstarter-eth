@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { ThemeToggle } from './themeToggle/theme-picker'
-import { Button } from './ui/button'
-import { HomeIcon } from 'lucide-react'
+import Link from 'next/link';
+import { ThemeToggle } from './themeToggle/theme-picker';
+import { Button } from './ui/button';
+import { HomeIcon } from 'lucide-react';
 
 export function Navbar() {
   return (
@@ -23,5 +23,5 @@ export function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
