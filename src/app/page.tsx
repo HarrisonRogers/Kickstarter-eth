@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [campaigns, setCampaigns] = useState<string[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,6 +50,8 @@ export default function Home() {
     }
   };
 
+  console.log(campaigns);
+
   return (
     <div className="p-4 flex justify-center items-center w-full">
       {error && (
@@ -71,10 +73,15 @@ export default function Home() {
 
           {campaigns.length > 0 ? (
             <ul className="space-y-2">
-              {campaigns.map((address) => (
-                <li key={address} className="border p-4 rounded flex flex-col">
-                  {address}
-                  <LinkComponent href={`/campaigns/${address}`}>
+              {campaigns.map((campaign) => (
+                <li
+                  key={campaign.address}
+                  className="border p-4 rounded flex flex-col"
+                >
+                  <h2 className="text-lg font-semibold mb-2">
+                    {campaign.title}
+                  </h2>
+                  <LinkComponent href={`/campaigns/${campaign.address}`}>
                     View
                   </LinkComponent>
                 </li>

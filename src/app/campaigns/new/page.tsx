@@ -36,7 +36,6 @@ function NewPage() {
     resolver: zodResolver(schema),
   });
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const router = useRouter();
 
   const handleCreateCampaign = async (data: CampaignFormData) => {
@@ -58,7 +57,6 @@ function NewPage() {
           from: accounts[0],
         });
       if (result) {
-        setSuccess(true);
         router.push('/');
       }
     } catch (error) {
@@ -126,7 +124,6 @@ function NewPage() {
             </Button>
           </div>
           {error && <p className="text-coral">{error}</p>}
-          {success && <p className="italic">Campaign created successfully</p>}
         </form>
       </div>
     </div>

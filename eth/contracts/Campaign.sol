@@ -94,5 +94,21 @@ contract Campaign {
     function getRequestsCount() public view returns (uint) {
         return requests.length;
     }
+
+    function getDetails() public view returns (
+        string memory title,
+        string memory description,
+        uint minimumContributionAmount,
+        uint balance,
+        address managerAddress
+    ) {
+        return (
+            campaignTitle,
+            campaignDescription,
+            minimumContribution,
+            address(this).balance,
+            manager
+        );
+    }
 }
 
