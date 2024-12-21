@@ -87,10 +87,6 @@ contract Campaign {
         request.complete = true;
     }
 
-    function getSummary() public view returns (uint, uint, uint, uint, address) {
-        return (minimumContribution, address(this).balance, requests.length, approversCount, manager);
-    }
-
     function getRequestsCount() public view returns (uint) {
         return requests.length;
     }
@@ -100,14 +96,18 @@ contract Campaign {
         string memory description,
         uint minimumContributionAmount,
         uint balance,
-        address managerAddress
+        address managerAddress,
+        uint requestsCount,
+        uint campaignApproversCount
     ) {
         return (
             campaignTitle,
             campaignDescription,
             minimumContribution,
             address(this).balance,
-            manager
+            manager,
+            requests.length,
+            approversCount
         );
     }
 }
