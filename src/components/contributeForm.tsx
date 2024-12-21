@@ -6,46 +6,68 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getCampaign } from '@/web3/campaign';
 import web3 from '@/web3/web3';
+import { useRouter } from 'next/navigation';
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const schema = z.object({
+  amount: z
+    .string()
+    .min(0.0001, { message: 'Amount is required' })
+    .refine((value) => !isNaN(Number(value)) && Number(value) >= 0.0001, {
+      message: 'Amount must be at least 0.0001 ETH',
+    }),
+});
+
+type ContributeFormData = z.infer<typeof schema>;
 
 function ContributeForm({ address }: { address: string }) {
-  const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
-  const handleContribute = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<ContributeFormData>({
+    resolver: zodResolver(schema),
+  });
+
+  const handleContribute = async (data: ContributeFormData) => {
     const campaign = await getCampaign(address);
 
     try {
       const accounts = await web3.eth.requestAccounts();
       await campaign.methods.contribute().send({
         from: accounts[0],
-        value: web3.utils.toWei(amount, 'ether'),
+        value: web3.utils.toWei(data.amount, 'ether'),
       });
+      router.refresh();
       setSuccess(true);
-      setLoading(false);
     } catch (error) {
       console.error('Error contributing to campaign:', error);
-      setError('Failed to contribute to campaign');
-      setLoading(false);
+      setError((error as Error).message);
     }
   };
 
   return (
-    <form onSubmit={handleContribute}>
-      <Label htmlFor="amount">Amount to contribute</Label>
+    <form onSubmit={handleSubmit(handleContribute)}>
+      <Label htmlFor="amount">Amount to contribute (ETH)</Label>
       <Input
         id="amount"
         type="number"
-        placeholder="in Eth"
-        className="mb-4 w-full"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        step="0.0001"
+        placeholder="in Eth..."
+        className="mb-1 w-full"
+        {...register('amount')}
       />
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? 'Contributing...' : 'Contribute'}
+      {errors.amount && (
+        <p className="text-red-500 text-sm ">{errors.amount.message}</p>
+      )}
+      <Button type="submit" className="w-full mt-4" disabled={isSubmitting}>
+        {isSubmitting ? 'Contributing...' : 'Contribute'}
       </Button>
       {error && <p className="text-coral">{error}</p>}
       {success && <p className="italic mt-4">Contribution successful</p>}
