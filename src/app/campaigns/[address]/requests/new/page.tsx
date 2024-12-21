@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useCampaignManager } from '@/hooks/useCampaignManager';
 
 const schema = z.object({
   description: z.string().min(1, { message: 'Description is required' }),
@@ -27,7 +28,10 @@ type RequestFormData = z.infer<typeof schema>;
 function Page({ params }: { params: { address: string } }) {
   const [error, setError] = useState('');
   const router = useRouter();
-
+  const { isManager } = useCampaignManager({
+    campaignAddress: params.address,
+    redirectTo: `/campaigns/${params.address}/requests`,
+  });
   const {
     register,
     handleSubmit,
@@ -35,6 +39,10 @@ function Page({ params }: { params: { address: string } }) {
   } = useForm<RequestFormData>({
     resolver: zodResolver(schema),
   });
+
+  if (!isManager) {
+    return <div>You are not the manager of this campaign</div>;
+  }
 
   const onSubmit = async (data: RequestFormData) => {
     const campaign = await getCampaign(params.address);

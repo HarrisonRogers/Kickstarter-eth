@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { getCampaign } from '@/web3/campaign';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useCampaignManager } from '@/hooks/useCampaignManager';
 
 type RequestsTableProps = {
   requests: RequestProps[];
@@ -30,6 +31,9 @@ function RequestsTable({
   const router = useRouter();
   const [approveLoading, setApproveLoading] = useState(false);
   const [finalizeLoading, setFinalizeLoading] = useState(false);
+  const { isManager } = useCampaignManager({
+    campaignAddress: address,
+  });
 
   const approveRequest = async (requestId: number) => {
     const campaign = await getCampaign(address);
@@ -75,7 +79,7 @@ function RequestsTable({
           <TableHead>Recipient</TableHead>
           <TableHead>Approval Count</TableHead>
           <TableHead>Approve</TableHead>
-          <TableHead>Finalize</TableHead>
+          {isManager && <TableHead>Finalize</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -89,7 +93,7 @@ function RequestsTable({
             <TableRow
               key={idx}
               className={cn(
-                isApproved ? 'bg-blue-100' : '',
+                isApproved && !isFinalized ? 'bg-blue-100 animate-pulse' : '',
                 isFinalized ? 'bg-green-100' : ''
               )}
             >
@@ -113,17 +117,19 @@ function RequestsTable({
                   </Button>
                 )}
               </TableCell>
-              <TableCell>
-                {request.complete ? null : (
-                  <Button
-                    onClick={() => finalizeRequest(idx)}
-                    className="disabled:cursor-not-allowed bg-green-500 hover:bg-green-600"
-                    disabled={finalizeLoading || !isApproved}
-                  >
-                    {finalizeLoading ? 'Finalizing...' : 'Finalize'}
-                  </Button>
-                )}
-              </TableCell>
+              {isManager && (
+                <TableCell>
+                  {request.complete ? null : (
+                    <Button
+                      onClick={() => finalizeRequest(idx)}
+                      className="disabled:cursor-not-allowed bg-green-500 hover:bg-green-600"
+                      disabled={finalizeLoading || !isApproved}
+                    >
+                      {finalizeLoading ? 'Finalizing...' : 'Finalize'}
+                    </Button>
+                  )}
+                </TableCell>
+              )}
             </TableRow>
           );
         })}
