@@ -2,12 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import LinkComponent from '@/components/ui/links/link';
+import { CampaignDetails } from '@/web3/campaign';
 import { getDeployedCampaigns } from '@/web3/factory';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
-  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [campaigns, setCampaigns] = useState<CampaignDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,8 +51,6 @@ export default function Home() {
     }
   };
 
-  console.log(campaigns);
-
   return (
     <div className="p-4 flex justify-center items-center w-full">
       {error && (
@@ -76,11 +75,16 @@ export default function Home() {
               {campaigns.map((campaign) => (
                 <li
                   key={campaign.address}
-                  className="border p-4 rounded flex flex-col"
+                  className="border p-4 rounded flex flex-col max-w-xl"
                 >
-                  <h2 className="text-lg font-semibold mb-2">
-                    {campaign.title}
-                  </h2>
+                  <div className="text-center">
+                    <h2 className="text-lg font-semibold mb-2">
+                      {campaign.title}
+                    </h2>
+                    <p className="text-sm text-gray-400 truncate">
+                      {campaign.description}
+                    </p>
+                  </div>
                   <LinkComponent href={`/campaigns/${campaign.address}`}>
                     View
                   </LinkComponent>

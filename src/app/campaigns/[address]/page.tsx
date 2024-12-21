@@ -1,6 +1,6 @@
 import Container from '@/components/ui/container';
 import React from 'react';
-import { getCampaign } from '@/web3/campaign';
+import { CampaignDetails, getCampaignDetails } from '@/web3/campaign';
 import { Card } from '@/components/ui/card';
 import web3 from '@/web3/web3';
 import ContributeForm from '@/components/contributeForm';
@@ -12,39 +12,34 @@ type PageProps = {
   address: string;
 };
 
-type CampaignSummary = {
-  minimumContribution: string;
-  balance: string;
-  requestsCount: string;
-  approversCount: string;
-  manager: string;
-};
-
 type CampaignCard = {
   title: string;
-  value: string;
+  value: string | number;
   description: string;
 };
 
 async function Page({ params }: { params: PageProps }) {
   const { address } = params;
-  let summary: CampaignSummary | null = null;
+  let summary: CampaignDetails | null = null;
 
   try {
-    const campaign = await getCampaign(address);
-    const response: [string, string, string, string, string] =
-      await campaign.methods.getSummary().call();
+    const campaign = await getCampaignDetails(address);
 
     summary = {
-      minimumContribution: String(response[0]),
-      balance: String(response[1]),
-      requestsCount: String(response[2]),
-      approversCount: String(response[3]),
-      manager: response[4],
+      minimumContribution: campaign.minimumContribution,
+      balance: campaign.balance,
+      requestsCount: campaign.requestsCount,
+      approversCount: campaign.approversCount,
+      manager: campaign.manager,
+      title: campaign.title,
+      description: campaign.description,
+      address: address,
     };
   } catch (error) {
     console.error('Error fetching campaign:', error);
   }
+
+  console.log(summary || 'No summary');
 
   if (!summary) {
     return (
@@ -60,31 +55,34 @@ async function Page({ params }: { params: PageProps }) {
   const campaignCards: CampaignCard[] = [
     {
       title: 'Manager Address',
-      value: summary.manager,
+      value: summary.manager || 'Not available',
       description: 'Eth address of the campaign manager',
     },
     {
       title: 'Minimum Contribution',
-      value: `${web3.utils.fromWei(summary.minimumContribution, 'ether')} ETH`,
+      value: `${web3.utils.fromWei(
+        (summary.minimumContribution || 0).toString(),
+        'ether'
+      )} ETH`,
       description: 'Minimum amount needed to contribute to this campaign',
     },
     {
       title: 'Campaign Balance',
       value: `${
-        Number(summary.balance) > Number(summary.minimumContribution)
-          ? web3.utils.fromWei(summary.balance, 'ether')
+        summary.balance
+          ? web3.utils.fromWei(summary.balance.toString(), 'ether')
           : '0'
       } ETH`,
       description: 'Current balance of the campaign',
     },
     {
       title: 'Number of Requests',
-      value: summary.requestsCount || '0',
+      value: summary.requestsCount || 0,
       description: 'Number of spending requests made by the manager',
     },
     {
       title: 'Contributors',
-      value: summary.approversCount || '0',
+      value: summary.approversCount || 0,
       description: 'Number of people who have donated to this campaign',
     },
   ];
@@ -94,7 +92,9 @@ async function Page({ params }: { params: PageProps }) {
       <div className="w-full max-w-7xl">
         <div className="mb-8">
           <BackButton label="Campaigns" />
-          <h1 className="text-3xl font-bold">{address} Campaign</h1>
+          <h1 className="text-3xl font-bold">{summary.title}</h1>
+          <p className="text-md mt-2">Campaign Address: {address}</p>
+          <p className="text-sm text-gray-500 mt-2">{summary.description}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 w-full">
