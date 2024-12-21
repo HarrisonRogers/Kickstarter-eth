@@ -30,6 +30,7 @@ async function Page({ params }: { params: { address: string } }) {
       <>
         <div className="flex relative justify-center gap-4 mb-4 w-full">
           <BackButton
+            href={`/campaigns/${params.address}`}
             label="Campaign"
             className="self-center absolute left-0"
           />
@@ -51,7 +52,13 @@ async function Page({ params }: { params: { address: string } }) {
         <p className="text-lg my-4 text-gray-500">
           {error instanceof Error ? error.message : 'Unknown error'}
         </p>
-        <BackButton label="Back to Campaign" />
+        <Link href={`/campaigns/${params.address}/requests/new`}>
+          <Button className="mt-2 mb-4">Create Request</Button>
+        </Link>
+        <BackButton
+          label="Back to Campaign"
+          href={`/campaigns/${params.address}`}
+        />
       </div>
     );
   }

@@ -1,25 +1,24 @@
-'use client';
-
 import React from 'react';
 import { Button, ButtonProps } from './button';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+
 type BackButtonProps = ButtonProps & {
   label?: string;
+  href: string;
 };
 
-function BackButton({ label, ...props }: BackButtonProps) {
-  const router = useRouter();
-
+function BackButton({ label, href, ...props }: BackButtonProps) {
   return (
-    <Button
-      onClick={() => router.back()}
-      variant="ghost"
-      className={cn('mb-4', props.className)}
-      {...props}
-    >
-      ← {label}
-    </Button>
+    <Link href={href}>
+      <Button
+        variant="ghost"
+        className={cn('mb-4', props.className)}
+        {...props}
+      >
+        ← {label}
+      </Button>
+    </Link>
   );
 }
 

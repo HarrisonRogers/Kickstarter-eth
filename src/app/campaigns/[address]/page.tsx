@@ -91,7 +91,7 @@ async function Page({ params }: { params: PageProps }) {
     <div className="p-8 flex flex-col items-center justify-center w-full">
       <div className="w-full max-w-7xl">
         <div className="mb-8">
-          <BackButton label="Campaigns" />
+          <BackButton label="Campaigns" href="/" />
           <h1 className="text-3xl font-bold">{summary.title}</h1>
           <p className="text-md mt-2">Campaign Address: {address}</p>
           <p className="text-sm text-gray-500 mt-2">{summary.description}</p>
