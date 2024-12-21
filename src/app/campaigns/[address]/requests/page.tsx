@@ -10,6 +10,7 @@ export type RequestProps = {
   value: string;
   recipient: string;
   approvalCount: string;
+  complete: boolean;
 };
 
 async function Page({ params }: { params: { address: string } }) {
@@ -17,12 +18,17 @@ async function Page({ params }: { params: { address: string } }) {
 
   try {
     const requestsCount = await campaign.methods.getRequestsCount().call();
+    const approversCount: string = await campaign.methods
+      .approversCount()
+      .call();
     const requests = await Promise.all(
-      Array(requestsCount)
-        .fill()
+      Array(Number(requestsCount))
+        .fill(0)
         .map(async (_, i) => {
-          const request = await campaign.methods.requests(i).call();
-          return request as unknown as RequestProps;
+          const request: RequestProps = await campaign.methods
+            .requests(i)
+            .call();
+          return request;
         })
     );
 
@@ -38,7 +44,11 @@ async function Page({ params }: { params: { address: string } }) {
             Requests List
           </h1>
         </div>
-        <RequestsTable requests={requests} />
+        <RequestsTable
+          requests={requests}
+          approversCount={approversCount}
+          address={params.address}
+        />
         <Link href={`/campaigns/${params.address}/requests/new`}>
           <Button className="mt-7">Create Request</Button>
         </Link>
