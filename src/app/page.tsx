@@ -62,7 +62,7 @@ export default function Home() {
       {loading ? (
         <div className="flex flex-col items-center gap-4">
           <p>Please connect your wallet to view campaigns</p>
-          <Button onClick={connectWallet}>Connect MetaMask</Button>
+          <Button onClick={connectWallet}>Connect Wallet</Button>
         </div>
       ) : (
         <div>

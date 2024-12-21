@@ -15,7 +15,10 @@ export function Navbar() {
             </Button>
           </Link>
         </div>
-        <Link href="/campaigns/new" className="border rounded-md px-4 py-2">
+        <Link
+          href="/campaigns/new"
+          className="border -ml-10 rounded-md px-4 py-2 "
+        >
           + Create Campaign
         </Link>
         <div className="flex items-center gap-2">

@@ -39,8 +39,6 @@ async function Page({ params }: { params: PageProps }) {
     console.error('Error fetching campaign:', error);
   }
 
-  console.log(summary || 'No summary');
-
   if (!summary) {
     return (
       <Container>
